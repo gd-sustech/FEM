@@ -1,4 +1,4 @@
-clear all; clc; clf; % clean the memory, screen, and figure
+clear all; clc; % clean the memory, screen, and figure
 
 % Problem definition
 f = @(x) -20*x.^3; % f(x) is the source
@@ -156,9 +156,10 @@ for ee = 1 : n_el
 end
 
 % Final L2 error calculation
-L2_error = sqrt(L2_error / L2_denominator);
+L2 = log(sqrt(L2_error / L2_denominator))
 
-disp(['L2 error: ', num2str(L2_error)]);
+
+
 
 
 
