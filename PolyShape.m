@@ -66,6 +66,39 @@ switch degree
             end
         end
 
+    % quartic basis function
+    case 4
+        if a == 1
+            if der == 0
+                val = (1 - xi) * (1 - 4*xi^2 + 3*xi^4) / 8;
+            elseif der == 1
+                val = (-1 + 12*xi^2 - 15*xi^4) / 8;
+            end
+        elseif a == 2
+            if der == 0
+                val = xi * (1 - 4*xi^2 + 3*xi^4) / 8;
+            elseif der == 1
+                val = (1 - 12*xi^2 + 15*xi^4) / 8;
+            end
+        elseif a == 3
+            if der == 0
+                val = (1 - xi) * (1 + 4*xi^2 - 3*xi^4) / 8;
+            elseif der == 1
+                val = (-1 - 12*xi^2 + 15*xi^4) / 8;
+            end
+        elseif a == 4
+            if der == 0
+                val = xi * (1 + 4*xi^2 - 3*xi^4) / 8;
+            elseif der == 1
+                val = (1 + 12*xi^2 - 15*xi^4) / 8;
+            end
+        elseif a == 5
+            if der == 0
+                val = 1 - xi^2 + xi^4 / 8;
+            elseif der == 1
+                val = -2*xi + 4*xi^3 / 8;
+            end
+        end
     otherwise
-        error('Error: degree has to be 1, 2, or 3.');
+        error('Error: degree has to be 1, 2, 3, or 4.');
 end

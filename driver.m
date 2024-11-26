@@ -6,9 +6,9 @@ g = 1.0;           % u    = g  at x = 1
 h = 0.0;           % -u,x = h  at x = 0
 
 % Setup the mesh
-pp   = 2;              % polynomial degree
+pp   = 1;              % polynomial degree
 n_en = pp + 1;         % number of element or local nodes
-n_el = 2;              % number of elements
+n_el = 4;              % number of elements
 n_np = n_el * pp + 1;  % number of nodal points
 n_eq = n_np - 1;       % number of equations
 n_int = 10;
@@ -125,9 +125,9 @@ for ee = 1 : n_el
 end
 
 
-% plot(x_sam, u_sam, '-r','LineWidth',1);
-% hold on;
-% plot(x_sam, y_sam, '-k','LineWidth',2);
+plot(x_sam, u_sam, '-r*','LineWidth',1);
+hold on;
+plot(x_sam, y_sam, '-b','LineWidth',1);
 
 
 
