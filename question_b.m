@@ -124,10 +124,43 @@ for ee = 1 : n_el
   end
 end
 
+%%%%%%%%
+% L2 error calculation
+L2_error = 0.0;  % Initialize L2 error
+L2_denominator = 0.0;  % Initialize denominator for L2 norm (exact solution squared)
 
-% plot(x_sam, u_sam, '-r','LineWidth',3);
-% hold on;
-% plot(x_sam, y_sam, '-k','LineWidth',3);
+% Loop over all elements
+for ee = 1 : n_el
+  x_ele = x_coor(IEN(ee,:)); % Element nodal coordinates
+  u_ele = disp(IEN(ee,:));   % Nodal values for numerical solution
+  
+  % Loop over the quadrature points (Gauss points)
+  for qua = 1 : n_int
+    % Local coordinate for the quadrature point
+    x_l = 0.0;
+    u_l = 0.0;
+    for aa = 1 : n_en
+      x_l = x_l + x_ele(aa) * PolyShape(pp, aa, xi(qua), 0);  % Compute physical x
+      u_l = u_l + u_ele(aa) * PolyShape(pp, aa, xi(qua), 0);  % Compute numerical solution
+    end
+    
+    % Exact solution at the current x_l
+    u_exact = x_l^5;  % exact solution u(x) = x^5
+    
+    % Add the squared difference to the numerator of the L2 error
+    L2_error = L2_error + weight(qua) * (u_l - u_exact)^2 * dx_dxi;
+    
+    % Add the squared exact solution to the denominator
+    L2_denominator = L2_denominator + weight(qua) * u_exact^2 * dx_dxi;
+  end
+end
+
+% Final L2 error calculation
+L2_error = sqrt(L2_error / L2_denominator);
+
+disp(['L2 error: ', num2str(L2_error)]);
+
+
 
 
 
