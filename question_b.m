@@ -125,10 +125,9 @@ for ee = 1 : n_el
 end
 
 
-% plot(x_sam, u_sam, '-r','LineWidth',1);
+% plot(x_sam, u_sam, '-r','LineWidth',3);
 % hold on;
-% plot(x_sam, y_sam, '-k','LineWidth',2);
-
+% plot(x_sam, y_sam, '-k','LineWidth',3);
 
 
 
