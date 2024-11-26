@@ -125,9 +125,9 @@ for ee = 1 : n_el
 end
 
 
-plot(x_sam, u_sam, '-r','LineWidth',3);
+plot(x_sam, u_sam, '-r','LineWidth',1);
 hold on;
-plot(x_sam, y_sam, '-k','LineWidth',3);
+plot(x_sam, y_sam, '-k','LineWidth',2);
 
 
 
