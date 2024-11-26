@@ -139,17 +139,17 @@ for ee = 1:n_el
     % Loop over quadrature points
     for qua = 1:n_int
         % Initialize variables for the calculations
-        dx_dxi = 0.0;
+%         dx_dxi = 0.0;
         u_grad = 0.0;
         
         % Loop over the local element nodes to compute shape function values and their derivatives
         for aa = 1:n_en
             % Shape function evaluations at the quadrature point
             u_grad = u_grad + u_ele(aa) * PolyShape(pp, aa, xi(qua), 1);     % Numerical derivative
-            dx_dxi = dx_dxi + x_ele(aa) * PolyShape(pp, aa, xi(qua), 1);     % Derivative of the coordinate
+%             dx_dxi = dx_dxi + x_ele(aa) * PolyShape(pp, aa, xi(qua), 1);     % Derivative of the coordinate
         end
         % Calculate Jacobian (dx/dxi)
-        dxi_dx = 1.0 / dx_dxi;
+%         dxi_dx = 1.0 / dx_dxi;
 
         % Exact solution derivative at the quadrature point
         x_l = 0.0;
@@ -159,7 +159,7 @@ for ee = 1:n_el
         u_exact_grad = exact_x(x_l);  % Exact derivative u'(x)
         
         % Compute the error in the derivative
-        H1_error = H1_error + weight(qua) * (u_grad - u_exact_grad)^2 * dx_dxi;
+        H1_error = H1_error + weight(qua) * (u_grad * dxi_dx - u_exact_grad)^2 * dx_dxi;
         H1_denominator = H1_denominator + weight(qua) * u_exact_grad^2 * dx_dxi;
     end
     
