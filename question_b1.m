@@ -1,5 +1,5 @@
 clear all; clc; % clean the memory, screen, and figure
-% for i=1:8
+for i=1:8
 % Problem definition
 f = @(x) -20*x.^3; % f(x) is the source
 g = 1.0;           % u    = g  at x = 1
@@ -8,7 +8,7 @@ h = 0.0;           % -u,x = h  at x = 0
 % Setup the mesh
 pp   = 2;              % polynomial degree
 n_en = pp + 1;         % number of element or local nodes
-n_el = 2;              % number of elements
+n_el = 2*i;              % number of elements
 n_np = n_el * pp + 1;  % number of nodal points
 n_eq = n_np - 1;       % number of equations
 n_int = 10;
@@ -125,64 +125,35 @@ for ee = 1 : n_el
 end
 
 % %%%%%%%%
-% % H1 error calculation
-% H1_error = 0.0;  % Initialize H1 error
-% H1_denominator = 0.0;  % Initialize denominator for H1 norm (exact solution squared)
-% 
-% % Loop over all elements
-% for ee = 1 : n_el
-%   x_ele = x_coor(IEN(ee,:)); % Element nodal coordinates
-%   u_ele = disp(IEN(ee,:));   % Nodal values for numerical solution
-%   
-%   % Loop over the quadrature points (Gauss points)
-%   for qua = 1 : n_int
-%     % Local coordinate for the quadrature point
-%     x_l = 0.0;
-%     u_l = 0.0;
-%     for aa = 1 : n_en
-%       x_l = x_l + x_ele(aa) * PolyShape(pp, aa, xi(qua), 0);  % Compute real x
-%       u_l = u_l + u_ele(aa) * PolyShape(pp, aa, xi(qua), 0);  % Compute numerical solution
-%     end
-%     
-%     % Exact solution at the current x_l
-%     u_exact = x_l^5;  % exact solution u(x) = x^5
-%     
-%     % Add the squared difference to the numerator of the L2 error
-%     H1_error = H1_error + weight(qua) * (u_l - u_exact)^2 * dx_dxi;
-%     
-%     % Add the squared exact solution to the denominator
-%     H1_denominator = H1_denominator + weight(qua) * u_exact^2 * dx_dxi;
-%   end
-% end
-% 
-% % Final L2 error calculation
-% H1(i) = log(sqrt(H1_error / H1_denominator));
-
-% 计算 u_h(x) 的一阶导数
-duh_dx = zeros(n_eq, 1);  % 初始化 u_h(x) 的导数
-
+% L2 error calculation
+L2_error = 0.0; % Initialize L2 error
+L2_denominator = 0.0; % Initialize denominator for L2 norm (exact solution squared)
+% Loop over all elements
 for ee = 1 : n_el
-    x_ele = x_coor(IEN(ee,:));  % 当前元素的节点坐标
-    u_ele = disp(IEN(ee,:));     % 当前元素的节点位移
-
-    % 高斯积分循环，计算元素的导数
-    for qua = 1 : n_int
-        dx_dxi = 0.0;
-        x_l = 0.0;
-        for aa = 1 : n_en
-            x_l = x_l + x_ele(aa) * PolyShape(pp, aa, xi(qua), 0);
-            dx_dxi = dx_dxi + x_ele(aa) * PolyShape(pp, aa, xi(qua), 1);  % 计算 dx/dxi
-        end
-        dxi_dx = 1.0 / dx_dxi;
-
-        % 将导数与形状函数的导数组合
-        for aa = 1 : n_en
-            duh_dx(aa) = duh_dx(aa) + weight(qua) * PolyShape(pp, aa, xi(qua), 1) * u_ele(aa) * dxi_dx;
-        end
-    end
+x_ele = x_coor(IEN(ee,:)); % Element nodal coordinates
+u_ele = disp(IEN(ee,:)); % Nodal values for numerical solution
+% Loop over the quadrature points (Gauss points)
+for qua = 1 : n_int
+% Local coordinate for the quadrature point
+x_l = 0.0;
+u_l = 0.0;
+for aa = 1 : n_en
+x_l = x_l + x_ele(aa) * PolyShape(pp, aa, xi(qua), 0); % Compute physical x
+u_l = u_l + u_ele(aa) * PolyShape(pp, aa, xi(qua), 0); % Compute numerical solution
 end
-
-
+% Exact solution at the current x_l
+u_exact = x_l^5; % exact solution u(x) = x^5
+% Add the squared difference to the numerator of the L2 error
+L2_error = L2_error + weight(qua) * (u_l - u_exact)^2 * dx_dxi;
+% Add the squared exact solution to the denominator
+L2_denominator = L2_denominator + weight(qua) * u_exact^2 * dx_dxi;
+end
+end
+% Final L2 error calculation
+L2(i) = log(sqrt(L2_error / L2_denominator));
+end
+xx=-log(2:2:16);
+plot (xx,L2,'-.')
 
 
 

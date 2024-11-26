@@ -1,5 +1,5 @@
-clear all; clc; clf; % clean the memory, screen, and figure
-
+clear all; clc;  % clean the memory, screen, and figure
+for i=1:8
 % Problem definition
 f = @(x) -20*x.^3; % f(x) is the source
 g = 1.0;           % u    = g  at x = 1
@@ -8,7 +8,7 @@ h = 0.0;           % -u,x = h  at x = 0
 % Setup the mesh
 pp   = 2;              % polynomial degree
 n_en = pp + 1;         % number of element or local nodes
-n_el = 2;              % number of elements
+n_el = 2*i;              % number of elements
 n_np = n_el * pp + 1;  % number of nodal points
 n_eq = n_np - 1;       % number of equations
 n_int = 10;
@@ -124,5 +124,50 @@ for ee = 1 : n_el
   end
 end
 
+% Exact solution and its derivative
+exact = @(x) x.^5;                 % Exact solution: u(x) = x^5
+exact_x = @(x) 5*x.^4;             % Exact derivative: u'(x) = 5x^4
+
+% Initialize H1 error component
+H1_error = 0.0;
+H1_denominator = 0.0;
+% Loop over each element to compute H1 error (only considering the derivatives)
+for ee = 1:n_el
+    x_ele = x_coor(IEN(ee,:));  % Element nodal coordinates
+    u_ele = disp(IEN(ee,:));    % Numerical solution values at the element nodes
+
+    % Loop over quadrature points
+    for qua = 1:n_int
+        % Initialize variables for the calculations
+        dx_dxi = 0.0;
+        u_grad = 0.0;
+        
+        % Loop over the local element nodes to compute shape function values and their derivatives
+        for aa = 1:n_en
+            % Shape function evaluations at the quadrature point
+            u_grad = u_grad + u_ele(aa) * PolyShape(pp, aa, xi(qua), 1);     % Numerical derivative
+            dx_dxi = dx_dxi + x_ele(aa) * PolyShape(pp, aa, xi(qua), 1);     % Derivative of the coordinate
+        end
+        % Calculate Jacobian (dx/dxi)
+        dxi_dx = 1.0 / dx_dxi;
+
+        % Exact solution derivative at the quadrature point
+        x_l = 0.0;
+        for aa = 1:n_en
+            x_l = x_l + x_ele(aa) * PolyShape(pp, aa, xi(qua), 0);           % Element coordinate
+        end
+        u_exact_grad = exact_x(x_l);  % Exact derivative u'(x)
+        
+        % Compute the error in the derivative
+        H1_error = H1_error + weight(qua) * (u_grad - u_exact_grad)^2 * dx_dxi;
+        H1_denominator = H1_denominator + weight(qua) * u_exact_grad^2 * dx_dxi;
+    end
+    
+end
+   H1(i) = log(sqrt(H1_error / H1_denominator));
+end
+
+xx=-log(2:2:16);
+plot (xx,H1,'-.')
 
 
