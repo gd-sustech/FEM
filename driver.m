@@ -1,3 +1,4 @@
+%final
 clear all; clc; clf; % clean the memory, screen, and figure
 
 % Problem definition

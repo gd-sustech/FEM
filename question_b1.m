@@ -1,3 +1,4 @@
+%final
 clear all; clc; % clean the memory, screen, and figure
 for i=1:8
 % Problem definition

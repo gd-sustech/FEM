@@ -1,10 +1,11 @@
+% not sure
 clear all; clc; clf; % clean the memory, screen, and figure
 
 % Problem definition
 f = @(x) -20*x.^3; % f(x) is the source
 g = 1.0;           % u    = g  at x = 1
 h = 0.0;           % -u,x = h  at x = 0
-
+hold on
 % Setup the mesh
 pp   = 3;              % polynomial degree
 n_en = pp + 1;         % number of element or local nodes

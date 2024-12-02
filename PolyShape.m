@@ -1,3 +1,4 @@
+%final
 function val = PolyShape(degree, a, xi, der)
 switch degree
     % linear basis function

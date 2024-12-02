@@ -1,3 +1,4 @@
+%final
 clear all; clc; clf; % clean the memory, screen, and figure
 
 % Problem definition
@@ -6,7 +7,7 @@ g = 1.0;           % u    = g  at x = 1
 h = 0.0;           % -u,x = h  at x = 0
 
 % Setup the mesh
-pp   = 3;              % polynomial degree
+pp   = 3;              % polynomial degree 可以是2
 n_en = pp + 1;         % number of element or local nodes
 n_el = 4;              % number of elements
 n_np = n_el * pp + 1;  % number of nodal points
