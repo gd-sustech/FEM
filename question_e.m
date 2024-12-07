@@ -5,11 +5,11 @@ clear all; clc; clf; % clean the memory, screen, and figure
 f = @(x) -20*x.^3; % f(x) is the source
 g = 1.0;           % u    = g  at x = 1
 h = 0.0;           % -u,x = h  at x = 0
-hold on
+u_exact = @(x) x.^5;
 % Setup the mesh
 pp   = 3;              % polynomial degree
 n_en = pp + 1;         % number of element or local nodes
-n_el = 4;              % number of elements
+n_el = 16;              % number of elements
 n_np = n_el * pp + 1;  % number of nodal points
 n_eq = n_np - 1;       % number of equations
 for i=3:6
@@ -119,15 +119,18 @@ for ee = 1 : n_el
       x_l = x_l + x_ele(aa) * PolyShape(pp, aa, xi_sam(ll), 0);
       u_l = u_l + u_ele(aa) * PolyShape(pp, aa, xi_sam(ll), 0);
     end
-   u_exact = x_l^5;
-   error((ee-1)*n_sam + ll)= abs(u_l-u_exact);
+%    u_exact = x_l^5;
+%    error((ee-1)*n_sam + ll)= u_l-u_ele(ee);
     x_sam( (ee-1)*n_sam + ll ) = x_l;
-%     u_sam( (ee-1)*n_sam + ll ) = u_l;
-%     y_sam( (ee-1)*n_sam + ll ) = x_l^5;
+    u_sam( (ee-1)*n_sam + ll ) = u_l;
+    y_sam( (ee-1)*n_sam + ll ) = x_l^5;
   end
+
+error(ee) = u_exact( x_coor( IEN(ee, 1) )) - disp(IEN(ee, 1) );
 end
-plot(x_sam, error, '-.','LineWidth',1)
+plot(x_coor(IEN(1 : n_el,1 )), error)  
+hold on
+% plot(x_sam, error, '-.','LineWidth',1)
+% hold on
 end
-% plot(x_sam, u_sam, '-r*','LineWidth',1);
-% hold on;
-% plot(x_sam, y_sam, '-b','LineWidth',1);
+legend('n_int = 3', 'n_int = 4', 'n_int = 5', 'n_int = 6');

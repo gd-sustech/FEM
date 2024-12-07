@@ -7,7 +7,7 @@ g = 1.0;           % u    = g  at x = 1
 h = 0.0;           % -u,x = h  at x = 0
 % ux = @(x) 5*x.^4   % ux(x) is the du/dx
 % Setup the mesh
-pp   = 2;              % polynomial degree
+pp   = 3;              % polynomial degree
 n_en = pp + 1;         % number of element or local nodes
 n_el = 2*i;              % number of elements
 n_np = n_el * pp + 1;  % number of nodal points
