@@ -42,16 +42,25 @@ end
 
 % IEN array
 IEN = zeros(n_el, n_en);
-for ex = 1 : n_el_x
-  for ey = 1 : n_el_y
-    ee = (ey-1) * n_el_x + ex; % element index
-    IEN(ee, 1) = (ey-1) * n_np_x + ex;
-    IEN(ee, 2) = (ey-1) * n_np_x + ex + 1;
-    IEN(ee, 3) =  ey    * n_np_x + ex + 1;
-    IEN(ee, 4) =  ey    * n_np_x + ex;
-  end
-end
+element_count = 0;
 
+for ex = 1 : n_el_x
+    for ey = 1 : n_el_y
+        % 四边形单元的节点
+        n1 = (ey-1)*n_np_x + ex;
+        n2 = n1 + 1;
+        n3 = n2 + n_np_x;
+        n4 = n1 + n_np_x;
+
+        % 第一个三角形
+        element_count = element_count + 1;
+        IEN(element_count, :) = [n1, n2, n3];
+
+        % 第二个三角形
+        element_count = element_count + 1;
+        IEN(element_count, :) = [n1, n3, n4];
+    end
+end
 % ID array
 ID = zeros(n_np,1);
 counter = 0;
