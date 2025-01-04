@@ -16,9 +16,9 @@ n_int     = n_int_xi * n_int_eta;
 [xi, eta, weight] = Gauss2D(n_int_xi, n_int_eta);
 
 % mesh generation
-n_en   = 3;               % number of nodes in an element
-n_el_x = 60;               % number of elements in x-dir
-n_el_y = 60;               % number of elements in y-dir
+n_en   = 3.0;               % number of nodes in an element
+n_el_x = 60.0;               % number of elements in x-dir
+n_el_y = 60.0;               % number of elements in y-dir
 n_el   = n_el_x * n_el_y; % total number of elements
 
 n_np_x = n_el_x + 1;      % number of nodal points in x-dir
@@ -144,7 +144,6 @@ end
 
 % solve the stiffness matrix
 dn = K \ F;
-
 % insert dn back into the vector for all nodes
 disp = zeros(n_np, 1);
 
