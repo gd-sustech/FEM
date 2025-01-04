@@ -1,19 +1,18 @@
-% not sure
-clear all; clc; clf; % clean the memory, screen, and figure
-
+%final
+clear all; clc; % clean the memory, screen, and figure
+for i=1:8
 % Problem definition
 f = @(x) -20*x.^3; % f(x) is the source
 g = 1.0;           % u    = g  at x = 1
 h = 0.0;           % -u,x = h  at x = 0
-u_exact = @(x) x.^5;
+% ux = @(x) 5*x.^4   % ux(x) is the du/dx
 % Setup the mesh
 pp   = 3;              % polynomial degree
 n_en = pp + 1;         % number of element or local nodes
-n_el = 16;              % number of elements
+n_el = 2*i;              % number of elements
 n_np = n_el * pp + 1;  % number of nodal points
 n_eq = n_np - 1;       % number of equations
-for i=3:6
-n_int = i;
+n_int = 10;
 
 hh = 1.0 / (n_np - 1); % space between two adjacent nodes
 x_coor = 0 : hh : 1;   % nodal coordinates for equally spaced nodes
@@ -119,18 +118,80 @@ for ee = 1 : n_el
       x_l = x_l + x_ele(aa) * PolyShape(pp, aa, xi_sam(ll), 0);
       u_l = u_l + u_ele(aa) * PolyShape(pp, aa, xi_sam(ll), 0);
     end
-   u_exact = x_l^5;
-   error((ee-1)*n_sam + ll)= u_exact-u_l;
+
     x_sam( (ee-1)*n_sam + ll ) = x_l;
     u_sam( (ee-1)*n_sam + ll ) = u_l;
     y_sam( (ee-1)*n_sam + ll ) = x_l^5;
   end
+end
 
-% error(ee) = abs(u_exact( x_coor( IEN(ee, 1) )) - disp(IEN(ee, 1) ));
+% %%%%%%%%
+% L2 error calculation
+L2_error = 0.0; % Initialize L2 error
+L2_denominator = 0.0; % Initialize denominator for L2 norm (exact solution squared)
+% Loop over all elements
+for ee = 1 : n_el
+x_ele = x_coor(IEN(ee,:)); % Element nodal coordinates
+u_ele = disp(IEN(ee,:)); % Nodal values for numerical solution
+% Loop over the quadrature points (Gauss points)
+for qua = 1 : n_int
+% Local coordinate for the quadrature point
+x_l = 0.0;
+u_l = 0.0;
+for aa = 1 : n_en
+x_l = x_l + x_ele(aa) * PolyShape(pp, aa, xi(qua), 0); % Compute physical x
+u_l = u_l + u_ele(aa) * PolyShape(pp, aa, xi(qua), 0); % Compute numerical solution
 end
-% plot(x_coor(IEN(1 : n_el,1 )), error)  
-% hold on
-plot(x_sam, error, '-.','LineWidth',1)
-hold on
+% Exact solution at the current x_l
+u_exact = x_l^5; % exact solution u(x) = x^5
+% Add the squared difference to the numerator of the L2 error
+L2_error = L2_error + weight(qua) * (u_l - u_exact)^2 * dx_dxi;
+% Add the squared exact solution to the denominator
+L2_denominator = L2_denominator + weight(qua) * u_exact^2 * dx_dxi;
 end
-legend('n_int = 3', 'n_int = 4', 'n_int = 5', 'n_int = 6');
+end
+% Final L2 error calculation
+L2(i) = log(sqrt(L2_error / L2_denominator));
+end
+xx=-log(2:2:16);
+plot (xx,L2,'-.')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% EOF
