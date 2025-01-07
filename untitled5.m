@@ -17,7 +17,7 @@ H1_errors = [];
 mesh_sizes = [];
 
 % Loop over different mesh sizes
-for n_el_x = [10, 20, 40, 80]  % Adjust mesh size
+for n_el_x = [10, 20, 60, 40, 80, 100]  % Adjust mesh size
     n_el_y = n_el_x;          % Keep uniform mesh
     hx = 1.0 / n_el_x;        % Mesh size in x-direction
     hy = 1.0 / n_el_y;        % Mesh size in y-direction
