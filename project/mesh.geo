@@ -16,20 +16,15 @@ Line(3) = {6, 3};  // 创建线段3，连接点6和3
 Line(4) = {3, 2};  // 创建线段4，连接点3和2
 Line(5) = {2, 1};  // 创建线段5，连接点2和1
 Line(6) = {1, 5};  // 创建线段6，连接点1和5
-Line(7) = {2, 7};  // 创建线段7，连接点2和7
 
-Curve Loop(1) = {4, 7, 2, 3}; // 创建曲线环1，包含线段4、7、2和3
+
+Curve Loop(1) = {1,2,3,4,5,6}; // 创建曲线环1，包含线段4、7、2和3
 Plane Surface(1) = {1};       // 创建平面表面1，使用曲线环1
 
-Curve Loop(2) = {7, -1, -6, -5}; // 创建曲线环2，包含线段7和负数索引的线段
-Plane Surface(2) = {2};          // 创建平面表面2，使用曲线环2
 
 Transfinite Line{3, 4, 5, 6} = 40; // 设置线段1到7的跨越点数为10
-Transfinite Line{7}=40;
-Transfinite Line{1,2}=20;
+Transfinite Line{1,2}=10;
 
-Transfinite Surface{1}; // 对表面1进行超有限元网格划分
-Transfinite Surface{2}; // 对表面2进行超有限元网格划分
 
 Mesh.ElementOrder = 1; // 设置网格元素的阶数为1
 Mesh.Algorithm = 8;    // 设置网格生成算法为8

@@ -45,19 +45,28 @@ end
 % 可视化应变
 % 选择应变分量 εx
 strain_x = strain(:, 1);
+strain_y = strain(:, 2); 
 
-% 可视化应变分布
-% 选择应变分量 εx
-strain_x = strain(:, 1);
-
-% 绘制应变分布到网格
+% 可视化 εx 和 εy 应变分布
 figure;
-patch('Faces', IEN, 'Vertices', [x_coor, y_coor], 'FaceVertexCData', strain_x, ...
+
+% 绘制 εx 应变分布
+subplot(1, 2, 1); % 创建第一个子图，1 行 2 列中的第 1 个
+patch('Faces', IEN, 'Vertices', [x_coor, y_coor], 'FaceVertexCData', strain(:, 1), ...
     'FaceColor', 'flat', 'EdgeColor', 'k');
 colorbar;
 title('四分之一带孔平板的应变分布 (εx)');
 xlabel('X 坐标');
 ylabel('Y 坐标');
 axis equal;
-% trisurf(IEN, x_coor, y_coor, strain_x);
-% shading interp;
+
+% 绘制 εy 应变分布
+subplot(1, 2, 2); % 创建第二个子图，1 行 2 列中的第 2 个
+patch('Faces', IEN, 'Vertices', [x_coor, y_coor], 'FaceVertexCData', strain(:, 2), ...
+    'FaceColor', 'flat', 'EdgeColor', 'k');
+colorbar;
+title('四分之一带孔平板的应变分布 (εy)');
+xlabel('X 坐标');
+ylabel('Y 坐标');
+axis equal;
+
