@@ -111,7 +111,7 @@ d = K \ F;
 % 位移后处理
 u = d(1:2:end);
 v = d(2:2:end);
-
+save('StressAnalysis', 'u', 'v', 'x_coor', 'y_coor', 'IEN');
 % 绘制变形图
 figure;
 trimesh(IEN, x_coor, y_coor, zeros(size(x_coor)), 'EdgeColor', 'k');
