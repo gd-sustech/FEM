@@ -1,6 +1,8 @@
+%%%这段代码是用解析解来算应变u，v
 % 材料参数与远场应力
 E = 10e9; % 杨氏模量 (Pa)
 nu = 0.3; % 泊松比
+G = E / (2 * (1 + nu)); % 剪切模量
 sigma_inf = 1e4; % 远场拉伸应力 (Pa)
 r_hole = 0.5; % 孔半径 (m)
 xc = -1; % 孔中心 x 坐标
@@ -47,44 +49,30 @@ for i = 1:length(x_nodes)
     sigma_y(i) = sigma_rr * sin(theta)^2 + sigma_tt * cos(theta)^2 - 2 * tau_rt * sin(theta) * cos(theta);
     tau_xy(i) = (sigma_tt - sigma_rr) * sin(theta) * cos(theta) + tau_rt * (cos(theta)^2 - sin(theta)^2);
 
-    % 计算 Von Mises 应力
-    von_mises(i) = sqrt(sigma_x(i)^2 + sigma_y(i)^2 - sigma_x(i) * sigma_y(i) + 3 * tau_xy(i)^2);
 end
 
-num_elements = size(IEN, 1); % 单元总数
-element_von_mises = zeros(num_elements, 1); % 每个单元的平均 Von Mises 应力
+% 计算应变分量
+epsilon_x = (1 / (E / (1 - nu^2))) * (sigma_x - nu * sigma_y);
+epsilon_y = (1 / (E / (1 - nu^2))) * (sigma_y - nu * sigma_x);
+gamma_xy = (1 / G) * tau_xy;
 
-% 逐单元计算平均应力
-for elem = 1:num_elements
-    % 获取当前单元的节点索引
-    nodes = IEN(elem, :);
-    
-    % 获取当前单元的 Von Mises 应力
-    vm_stresses = von_mises(nodes);
-    
-    % 计算平均 Von Mises 应力
-    element_von_mises(elem) = mean(vm_stresses, 'omitnan');
+% 计算位移梯度
+du_dx = epsilon_x;  % 位移在x方向的梯度
+dv_dy = epsilon_y;  % 位移在y方向的梯度
+du_dy = gamma_xy / 2; % 位移在y方向的梯度（剪切应变）
+dv_dx = gamma_xy / 2; % 位移在x方向的梯度（剪切应变）
+
+% 积分得到位移
+u = zeros(size(x_nodes)); % x方向位移
+v = zeros(size(y_nodes)); % y方向位移
+
+% 积分计算位移
+for i = 2:length(x_nodes)
+    u(i) = u(i-1) + du_dx(i) * (x_nodes(i) - x_nodes(i-1)); % 积分计算u
+    v(i) = v(i-1) + dv_dy(i) * (y_nodes(i) - y_nodes(i-1)); % 积分计算v
 end
+u_exact=u;
+v_exact=v;
 
-% 输出平均单元应力结果
-% fprintf('每个单元的平均 Von Mises 应力:\n');
-% disp(element_von_mises);
-
-% 可视化单元平均应力分布
-figure;
-patch('Faces', IEN, 'Vertices', [x_coor, y_coor], ...
-      'FaceVertexCData', element_von_mises, ... % 应力数据
-      'FaceColor', 'flat', ...                 % 填充颜色
-      'EdgeColor', 'k', ...                    % 网格线颜色 (黑色)
-      'LineWidth', 0.5);                       % 网格线宽度
-colorbar;
-title('四分之一带孔平板的平均单元应力分布 (Von Mises 应力)');
-xlabel('X 坐标');
-ylabel('Y 坐标');
-axis equal;
-xlim([-1 1]);
-ylim([-1 1]);
-save('Stress_exact', 'von_mises');
-
-
-
+% 保存位移结果
+save('Displacement_exact', 'u_exact', 'v_exact', 'x_coor', 'y_coor');

@@ -38,7 +38,7 @@ K = spalloc(n_eq, n_eq, 36 * size(IEN, 1));
 F = zeros(n_eq, 1);
 
 % 高斯积分点
-n_int = 2; % 每个方向的积分点数
+n_int = 3; % 每个方向的积分点数
 [xi, eta, weight] = Gauss2D(n_int, n_int);
 
 % 单元刚度矩阵组装
@@ -123,7 +123,7 @@ for ee = 1:n_elements
     d_ele = d_ele(:); % 转为列向量
 
     % 高斯积分点
-    n_int = 2; % 每方向积分点数
+    n_int = 3; % 每方向积分点数
     [xi, eta, weight] = Gauss2D(n_int, n_int);
 
     % 初始化单元应力
@@ -165,7 +165,7 @@ figure;
 patch('Faces', IEN, 'Vertices', [x_coor, y_coor], 'FaceVertexCData', stress_eq, ...
     'FaceColor', 'flat', 'EdgeColor', 'k');
 colorbar;
-title('四分之一带孔平板的应力分布 (Von Mises 应力)');
+title('四分之一带孔平板的应力分布 (FEM Von Mises 应力)');
 xlabel('X 坐标');
 ylabel('Y 坐标');
 axis equal;
