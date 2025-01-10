@@ -96,7 +96,7 @@ end
 
 % 右边界施加拉伸力
 right_edge = find(abs(x_coor - 1) < 1e-5);
-force_per_node = 10e3 * 0.1; % 10 KPa
+force_per_node = 10e3; % 10 KPa
 for i = 1:length(right_edge)
     dof = ID(right_edge(i), 1);
     F(dof) = F(dof) + force_per_node;
@@ -169,7 +169,7 @@ title('四分之一带孔平板的应力分布 (Von Mises 应力)');
 xlabel('X 坐标');
 ylabel('Y 坐标');
 axis equal;
-
+save('StressAnalysis', 'u', 'v', 'x_coor', 'y_coor', 'IEN');
 
 
 
