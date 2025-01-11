@@ -3,7 +3,7 @@
 E = 10e9; % 杨氏模量 (Pa)
 nu = 0.3; % 泊松比
 sigma_inf = 1e4; % 远场拉伸应力 (Pa)
-r_hole = 0.50; % 孔半径 (m)
+r_hole = 0.5; % 孔半径 (m)
 xc = -1; % 孔中心 x 坐标
 yc = -1; % 孔中心 y 坐标
 x_coor = msh.POS(:, 1); % x 坐标
@@ -32,7 +32,7 @@ for i = 1:length(x_nodes)
     theta = atan2(y - yc, x - xc); % 极角
 
     % 判断是否在四分之一平板的有效区域
-    if r < r_hole || x < -1 || y < -1 || x > 1 || y > 1
+    if r < r_hole - 1e-6 || x < -1 || y < -1 || x > 1 || y > 1 % 调整条件以避免忽略靠近圆弧边的网格
         sigma_x(i) = NaN; % 忽略无效区域或孔内区域
         sigma_y(i) = NaN;
         tau_xy(i) = NaN;
@@ -121,6 +121,7 @@ ylabel('Y 坐标');
 axis equal;
 xlim([-1 1]);
 ylim([-1 1]);
+
 
 
 

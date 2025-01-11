@@ -165,7 +165,7 @@ figure;
 patch('Faces', IEN, 'Vertices', [x_coor, y_coor], 'FaceVertexCData', stress_eq, ...
     'FaceColor', 'flat', 'EdgeColor', 'k');
 colorbar;
-title('四分之一带孔平板的应力分布 (FEM Von Mises 应力)');
+title('FEM:四分之一带孔平板的应力分布 (FEM Von Mises 应力)');
 xlabel('X 坐标');
 ylabel('Y 坐标');
 axis equal;
